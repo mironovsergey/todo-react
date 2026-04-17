@@ -1,0 +1,36 @@
+@use '@/styles/variables' as *;
+
+.dialog {
+  border: none;
+  border-radius: $radius-lg;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: $shadow-lg;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.content {
+  padding: $spacing-xl;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  margin-bottom: $spacing-sm;
+}
+
+.message {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xl;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+}

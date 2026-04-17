@@ -1,0 +1,59 @@
+@use '@/styles/variables' as *;
+
+.card {
+  padding: $spacing-xl;
+  background-color: $color-bg-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: 600;
+}
+
+.editButton {
+  padding: $spacing-xs;
+  border-radius: $radius-md;
+  color: $color-text-muted;
+
+  &:hover {
+    color: $color-primary;
+    background-color: $color-primary-light;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+}

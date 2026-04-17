@@ -1,0 +1,18 @@
+@use '@/styles/variables' as *;
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-2xl;
+}
+
+.empty {
+  color: $color-text-muted;
+  font-size: $font-size-sm;
+}

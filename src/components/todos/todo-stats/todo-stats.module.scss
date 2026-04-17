@@ -1,0 +1,42 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-md;
+  background-color: $color-bg-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+}
+
+.value {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.completed .value {
+  color: $color-success;
+}
+
+.pending .value {
+  color: $color-warning;
+}

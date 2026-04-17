@@ -1,0 +1,19 @@
+@use '@/styles/variables' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.bulkBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-lg;
+  background-color: $color-danger-light;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-danger;
+  font-weight: 500;
+}

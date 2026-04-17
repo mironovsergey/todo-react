@@ -1,0 +1,9 @@
+@use '@/styles/variables' as *;
+
+.main {
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: $spacing-xl $spacing-lg;
+  flex: 1;
+}

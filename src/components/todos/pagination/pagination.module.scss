@@ -1,0 +1,46 @@
+@use '@/styles/variables' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md 0;
+}
+
+.info {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.pageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  border: 1px solid $color-border;
+
+  &:hover:not(:disabled) {
+    background-color: $color-bg;
+    color: $color-text;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.current {
+  font-size: $font-size-sm;
+  color: $color-text;
+  font-weight: 500;
+}

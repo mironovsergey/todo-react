@@ -1,0 +1,246 @@
+@use '@/styles/variables' as *;
+
+.card {
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background-color: $color-bg-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+
+  &.completed {
+    opacity: 0.7;
+  }
+}
+
+.checkboxArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding-top: 2px;
+}
+
+.selectLabel {
+  display: flex;
+  cursor: pointer;
+}
+
+.selectInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.selectBox {
+  width: 24px;
+  height: 24px;
+  border-radius: $radius-sm;
+  border: 2px solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+
+  &.selected {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: white;
+  }
+}
+
+.toggleButton {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: $color-success;
+    color: $color-success;
+  }
+
+  &.toggled {
+    background-color: $color-success;
+    border-color: $color-success;
+    color: white;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.title {
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  color: $color-text-muted;
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+  word-break: break-word;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.tag {
+  padding: 1px $spacing-sm;
+  background-color: $color-bg;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.date {
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.actionButton {
+  padding: $spacing-xs;
+  border-radius: $radius-md;
+  color: $color-text-muted;
+  transition: all 0.15s;
+
+  &:hover {
+    color: $color-text;
+    background-color: $color-bg;
+  }
+}
+
+.deleteButton:hover {
+  color: $color-danger;
+  background-color: $color-danger-light;
+}
+
+// Edit mode
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.editInput {
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  font-weight: 500;
+
+  &:focus {
+    outline: none;
+    border-color: $color-border-focus;
+  }
+}
+
+.editTextarea {
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: $color-border-focus;
+  }
+}
+
+.editSelect {
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  width: fit-content;
+
+  &:focus {
+    outline: none;
+    border-color: $color-border-focus;
+  }
+}
+
+.editActions {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.saveButton,
+.cancelButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+}
+
+.saveButton {
+  color: $color-success;
+
+  &:hover {
+    background-color: $color-success-light;
+  }
+}
+
+.cancelButton {
+  color: $color-text-muted;
+
+  &:hover {
+    background-color: $color-bg;
+  }
+}

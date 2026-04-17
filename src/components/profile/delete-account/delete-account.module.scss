@@ -1,0 +1,27 @@
+@use '@/styles/variables' as *;
+
+.card {
+  padding: $spacing-xl;
+  background-color: $color-bg-white;
+  border: 1px solid $color-danger;
+  border-radius: $radius-lg;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-danger;
+  margin-bottom: $spacing-sm;
+}
+
+.warning {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-lg;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
