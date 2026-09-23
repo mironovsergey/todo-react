@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTodoTags } from '@/hooks/use-todos';
 import type { TodosQueryParams } from '@/types/todo';
@@ -6,7 +7,7 @@ import styles from './todo-filters.module.scss';
 
 interface TodoFiltersProps {
   params: TodosQueryParams;
-  onChange: (params: TodosQueryParams) => void;
+  onChange: Dispatch<SetStateAction<TodosQueryParams>>;
 }
 
 export const TodoFilters = ({ params, onChange }: TodoFiltersProps) => {
@@ -15,14 +16,14 @@ export const TodoFilters = ({ params, onChange }: TodoFiltersProps) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const trimmed = searchInput.trim();
-      if (trimmed !== (params.search ?? '')) {
-        onChange({ ...params, search: trimmed || undefined, page: 1 });
-      }
+      const search = searchInput.trim() || undefined;
+
+      // The updater receives the latest params, so a filter changed during the delay is kept.
+      onChange((prev) => (prev.search === search ? prev : { ...prev, search, page: 1 }));
     }, 400);
 
     return () => clearTimeout(timeout);
-  }, [searchInput]);
+  }, [searchInput, onChange]);
 
   const handleCompletedChange = (value: string) => {
     const completed = value === 'all' ? undefined : value === 'true';
