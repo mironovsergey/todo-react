@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCreateTodo } from '@/hooks/use-todos';
 import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
+import { createTodoSchema } from '@/schemas/todo';
 import type { TodoInput } from '@/types/todo';
 import styles from './todo-form.module.scss';
 
@@ -14,22 +16,15 @@ export const TodoForm = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TodoInput>();
+  } = useForm({ resolver: zodResolver(createTodoSchema) });
   const { mutate: createTodo, isPending } = useCreateTodo();
-  const [tagsInput, setTagsInput] = useState('');
 
-  const onSubmit = (data: TodoInput) => {
-    const tags = tagsInput
-      .split(',')
-      .map((t) => t.trim())
-      .filter(Boolean);
-
+  const onSubmit = ({ tags, ...data }: TodoInput) => {
     createTodo(
-      { ...data, tags: tags.length ? tags : undefined },
+      { ...data, tags: tags?.length ? tags : undefined },
       {
         onSuccess: () => {
           reset();
-          setTagsInput('');
           setIsExpanded(false);
         },
       },
@@ -73,6 +68,9 @@ export const TodoForm = () => {
               rows={3}
               {...register('description')}
             />
+            {errors.description && (
+              <span className={styles.error}>{errors.description.message}</span>
+            )}
           </div>
 
           <div className={styles.row}>
@@ -95,9 +93,9 @@ export const TodoForm = () => {
                 id="tags"
                 className={styles.tagsInput}
                 placeholder="work, urgent"
-                value={tagsInput}
-                onChange={(e) => setTagsInput(e.target.value)}
+                {...register('tags')}
               />
+              {errors.tags && <span className={styles.error}>{errors.tags.message}</span>}
             </div>
           </div>
         </div>

@@ -214,6 +214,11 @@
   }
 }
 
+.editError {
+  font-size: $font-size-xs;
+  color: $color-danger;
+}
+
 .editActions {
   display: flex;
   gap: $spacing-sm;

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Pencil, Trash2, Check, X } from 'lucide-react';
 import { useUpdateTodo, useDeleteTodo, useToggleTodo } from '@/hooks/use-todos';
 import { Badge } from '@/components/ui/badge/badge';
 import { formatRelativeDate } from '@/utils/formatters';
 import { PRIORITY_LABELS } from '@/utils/constants';
+import { updateTodoSchema } from '@/schemas/todo';
 import type { Todo, TodoUpdate } from '@/types/todo';
 import styles from './todo-card.module.scss';
 
@@ -26,7 +28,13 @@ export const TodoCard = ({ todo, isSelected, onSelect }: TodoCardProps) => {
   const { mutate: updateTodo, isPending: isUpdating } = useUpdateTodo();
   const { mutate: deleteTodo, isPending: isDeleting } = useDeleteTodo();
 
-  const { register, handleSubmit, reset } = useForm<TodoUpdate>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(updateTodoSchema),
     defaultValues: {
       title: todo.title,
       description: todo.description ?? '',
@@ -76,13 +84,17 @@ export const TodoCard = ({ todo, isSelected, onSelect }: TodoCardProps) => {
       <div className={styles.content}>
         {isEditing ? (
           <form onSubmit={handleSubmit(onSubmit)} className={styles.editForm}>
-            <input className={styles.editInput} {...register('title', { required: true })} />
+            <input className={styles.editInput} {...register('title')} />
+            {errors.title && <span className={styles.editError}>{errors.title.message}</span>}
             <textarea
               className={styles.editTextarea}
               rows={2}
               placeholder="Description..."
               {...register('description')}
             />
+            {errors.description && (
+              <span className={styles.editError}>{errors.description.message}</span>
+            )}
             <select className={styles.editSelect} {...register('priority')}>
               <option value="low">Low</option>
               <option value="medium">Medium</option>

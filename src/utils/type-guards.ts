@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '@/types/api';
+import type { ErrorDetail, ErrorResponse } from '@/types/api';
 import type { Priority, SortOrder, TodosQueryParams } from '@/types/todo';
 
 const PRIORITIES: Priority[] = ['low', 'medium', 'high'];
@@ -31,7 +31,16 @@ export const isErrorResponse = (value: unknown): value is ErrorResponse => {
     typeof error.code === 'string' &&
     'message' in error &&
     typeof error.message === 'string' &&
-    'details' in error &&
-    Array.isArray(error.details)
+    (!('details' in error) || Array.isArray(error.details))
+  );
+};
+
+export const isErrorDetail = (value: unknown): value is ErrorDetail => {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'message' in value &&
+    typeof value.message === 'string' &&
+    (!('field' in value) || typeof value.field === 'string')
   );
 };

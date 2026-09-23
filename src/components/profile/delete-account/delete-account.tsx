@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useDeleteAccount } from '@/hooks/use-user';
 import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog/confirm-dialog';
+import { deleteAccountSchema } from '@/schemas/user';
 import type { DeleteAccountData } from '@/types/user';
 import styles from './delete-account.module.scss';
 
@@ -14,7 +16,7 @@ export const DeleteAccount = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<DeleteAccountData>();
+  } = useForm({ resolver: zodResolver(deleteAccountSchema) });
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
   const onSubmit = (data: DeleteAccountData) => {
@@ -36,7 +38,7 @@ export const DeleteAccount = () => {
           type="password"
           label="Confirm your password"
           error={errors.password?.message}
-          {...register('password', { required: 'Password is required' })}
+          {...register('password')}
         />
         <Button
           type="button"

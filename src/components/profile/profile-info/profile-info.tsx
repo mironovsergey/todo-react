@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Pencil } from 'lucide-react';
 import { useAuthContext } from '@/hooks/use-auth-context';
 import { useUpdateProfile } from '@/hooks/use-user';
 import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
+import { updateProfileSchema } from '@/schemas/user';
 import { formatDate } from '@/utils/formatters';
 import type { UpdateProfileData } from '@/types/user';
 import styles from './profile-info.module.scss';
@@ -13,7 +15,12 @@ export const ProfileInfo = () => {
   const { user } = useAuthContext();
   const [isEditing, setIsEditing] = useState(false);
   const { mutate: updateProfile, isPending } = useUpdateProfile();
-  const { register, handleSubmit } = useForm<UpdateProfileData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(updateProfileSchema),
     defaultValues: { name: user?.name ?? '' },
   });
 
@@ -38,7 +45,7 @@ export const ProfileInfo = () => {
 
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          <Input id="name" label="Name" {...register('name')} />
+          <Input id="name" label="Name" error={errors.name?.message} {...register('name')} />
           <div className={styles.actions}>
             <Button type="submit" size="sm" isLoading={isPending}>
               Save
