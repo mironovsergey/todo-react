@@ -19,7 +19,13 @@ export const DeleteAccount = () => {
   } = useForm({ resolver: zodResolver(deleteAccountSchema) });
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
-  const onSubmit = (data: DeleteAccountData) => {
+  // Submitting the form, by the button or by Enter, only validates the password and asks
+  // for confirmation; the account is deleted from the dialog.
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const onConfirm = (data: DeleteAccountData) => {
     setIsDialogOpen(false);
     deleteAccount(data);
   };
@@ -32,7 +38,7 @@ export const DeleteAccount = () => {
         removed.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form} noValidate>
+      <form onSubmit={handleSubmit(openDialog)} className={styles.form} noValidate>
         <Input
           id="deletePassword"
           type="password"
@@ -40,12 +46,7 @@ export const DeleteAccount = () => {
           error={errors.password?.message}
           {...register('password')}
         />
-        <Button
-          type="button"
-          variant="danger"
-          onClick={() => setIsDialogOpen(true)}
-          isLoading={isPending}
-        >
+        <Button type="submit" variant="danger" isLoading={isPending}>
           Delete Account
         </Button>
       </form>
@@ -55,7 +56,7 @@ export const DeleteAccount = () => {
         title="Delete account?"
         message="This action cannot be undone. All your data will be permanently deleted."
         confirmLabel="Delete"
-        onConfirm={handleSubmit(onSubmit)}
+        onConfirm={handleSubmit(onConfirm)}
         onCancel={() => {
           setIsDialogOpen(false);
           reset();
