@@ -8,17 +8,24 @@ import { AuthProvider } from '@/context/auth-provider';
 import { App } from '@/app';
 import '@/styles/global.scss';
 
+// The message doubles as the toast id, so parallel requests failing for the same reason,
+// such as an expired session, produce a single toast.
+const showErrorToast = (error: Error) => {
+  const message = getErrorMessage(error);
+  toast.error(message, { id: message });
+};
+
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query.meta?.suppressErrorToast) return;
-      toast.error(getErrorMessage(error));
+      showErrorToast(error);
     },
   }),
   mutationCache: new MutationCache({
     onError: (error, _variables, _context, mutation) => {
       if (mutation.meta?.suppressErrorToast) return;
-      toast.error(getErrorMessage(error));
+      showErrorToast(error);
     },
   }),
   defaultOptions: {

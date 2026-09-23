@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { User } from '@/types/user';
+import { onSessionExpired } from '@/services/api';
 import { getProfile } from '@/services/users';
 import { signOut, signOutAll } from '@/services/auth';
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '@/utils/tokens';
@@ -31,6 +32,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     loadUser();
   }, []);
+
+  useEffect(() => onSessionExpired(() => setUser(null)), []);
 
   const login = useCallback((user: User, tokens: { accessToken: string; refreshToken: string }) => {
     setTokens(tokens);
