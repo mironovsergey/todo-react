@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTodoTags } from '@/hooks/use-todos';
+import { isPriority, isSortField, isSortOrder } from '@/utils/type-guards';
 import type { TodosQueryParams } from '@/types/todo';
 import styles from './todo-filters.module.scss';
 
 interface TodoFiltersProps {
   params: TodosQueryParams;
-  onChange: (params: TodosQueryParams) => void;
+  onChange: Dispatch<SetStateAction<TodosQueryParams>>;
 }
 
 export const TodoFilters = ({ params, onChange }: TodoFiltersProps) => {
@@ -15,31 +17,35 @@ export const TodoFilters = ({ params, onChange }: TodoFiltersProps) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const trimmed = searchInput.trim();
-      if (trimmed !== (params.search ?? '')) {
-        onChange({ ...params, search: trimmed || undefined, page: 1 });
-      }
+      const search = searchInput.trim() || undefined;
+
+      // The updater receives the latest params, so a filter changed during the delay is kept.
+      onChange((prev) => (prev.search === search ? prev : { ...prev, search, page: 1 }));
     }, 400);
 
     return () => clearTimeout(timeout);
-  }, [searchInput]);
+  }, [searchInput, onChange]);
 
   const handleCompletedChange = (value: string) => {
     const completed = value === 'all' ? undefined : value === 'true';
     onChange({ ...params, completed, page: 1 });
   };
 
+  // The "all" option is not a priority, so it clears the filter.
   const handlePriorityChange = (value: string) => {
-    const priority = value === 'all' ? undefined : (value as 'low' | 'medium' | 'high');
-    onChange({ ...params, priority, page: 1 });
+    onChange({ ...params, priority: isPriority(value) ? value : undefined, page: 1 });
   };
 
   const handleSortChange = (value: string) => {
-    onChange({ ...params, sortBy: value as TodosQueryParams['sortBy'] });
+    if (isSortField(value)) {
+      onChange({ ...params, sortBy: value });
+    }
   };
 
   const handleOrderChange = (value: string) => {
-    onChange({ ...params, order: value as 'asc' | 'desc' });
+    if (isSortOrder(value)) {
+      onChange({ ...params, order: value });
+    }
   };
 
   const handleTagClick = (tag: string) => {

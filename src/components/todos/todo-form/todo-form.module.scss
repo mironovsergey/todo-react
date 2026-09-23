@@ -75,6 +75,11 @@
   }
 }
 
+.error {
+  font-size: $font-size-xs;
+  color: $color-danger;
+}
+
 .select,
 .tagsInput {
   padding: $spacing-sm $spacing-md;

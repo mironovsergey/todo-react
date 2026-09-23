@@ -1,12 +1,16 @@
 import { AxiosError } from 'axios';
-import type { ErrorResponse } from '@/types/api';
+import { isErrorDetail, isErrorResponse } from '@/utils/type-guards';
 
 export const getErrorMessage = (error: unknown): string => {
   if (error instanceof AxiosError) {
-    const data = error.response?.data as ErrorResponse | undefined;
+    const data = error.response?.data;
 
-    if (data?.error?.message) {
-      return data.error.message;
+    if (isErrorResponse(data)) {
+      // A validation error states the specific reason in its details; its top-level
+      // message is generic ("Validation failed").
+      const detail = data.error.details?.find(isErrorDetail);
+
+      return detail?.message ?? data.error.message;
     }
 
     if (error.message === 'Network Error') {

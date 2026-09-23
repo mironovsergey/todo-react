@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useDeleteAccount } from '@/hooks/use-user';
 import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog/confirm-dialog';
+import { deleteAccountSchema } from '@/schemas/user';
 import type { DeleteAccountData } from '@/types/user';
 import styles from './delete-account.module.scss';
 
@@ -14,10 +16,16 @@ export const DeleteAccount = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<DeleteAccountData>();
+  } = useForm({ resolver: zodResolver(deleteAccountSchema) });
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
-  const onSubmit = (data: DeleteAccountData) => {
+  // Submitting the form, by the button or by Enter, only validates the password and asks
+  // for confirmation; the account is deleted from the dialog.
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const onConfirm = (data: DeleteAccountData) => {
     setIsDialogOpen(false);
     deleteAccount(data);
   };
@@ -30,20 +38,15 @@ export const DeleteAccount = () => {
         removed.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form} noValidate>
+      <form onSubmit={handleSubmit(openDialog)} className={styles.form} noValidate>
         <Input
           id="deletePassword"
           type="password"
           label="Confirm your password"
           error={errors.password?.message}
-          {...register('password', { required: 'Password is required' })}
+          {...register('password')}
         />
-        <Button
-          type="button"
-          variant="danger"
-          onClick={() => setIsDialogOpen(true)}
-          isLoading={isPending}
-        >
+        <Button type="submit" variant="danger" isLoading={isPending}>
           Delete Account
         </Button>
       </form>
@@ -53,7 +56,7 @@ export const DeleteAccount = () => {
         title="Delete account?"
         message="This action cannot be undone. All your data will be permanently deleted."
         confirmLabel="Delete"
-        onConfirm={handleSubmit(onSubmit)}
+        onConfirm={handleSubmit(onConfirm)}
         onCancel={() => {
           setIsDialogOpen(false);
           reset();

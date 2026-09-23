@@ -28,7 +28,9 @@ export const ConfirmDialog = ({
   useEffect(() => {
     const dialog = dialogRef.current;
 
-    if (!dialog) return;
+    if (!dialog) {
+      return;
+    }
 
     if (isOpen && !dialog.open) {
       dialog.showModal();
@@ -43,7 +45,9 @@ export const ConfirmDialog = ({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <dialog ref={dialogRef} className={styles.dialog} onClick={handleBackdropClick}>

@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { useSignUp } from '@/hooks/use-auth';
 import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
+import { signUpSchema } from '@/schemas/auth';
 import { ROUTES } from '@/utils/constants';
 import type { SignUpData } from '@/types/auth';
 import styles from './sign-up-form.module.scss';
@@ -12,7 +14,7 @@ export const SignUpForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpData>();
+  } = useForm({ resolver: zodResolver(signUpSchema) });
   const { mutate: signUp, isPending } = useSignUp();
 
   const onSubmit = (data: SignUpData) => {
@@ -37,19 +39,16 @@ export const SignUpForm = () => {
         label="Email"
         placeholder="you@example.com"
         error={errors.email?.message}
-        {...register('email', { required: 'Email is required' })}
+        {...register('email')}
       />
 
       <Input
         id="password"
         type="password"
         label="Password"
-        placeholder="At least 8 characters"
+        placeholder="At least 8 characters, letters and digits"
         error={errors.password?.message}
-        {...register('password', {
-          required: 'Password is required',
-          minLength: { value: 8, message: 'Minimum 8 characters' },
-        })}
+        {...register('password')}
       />
 
       <Button type="submit" isLoading={isPending}>

@@ -14,7 +14,12 @@ export interface ErrorResponse {
   error: {
     code: string;
     message: string;
-    details: ErrorDetail[];
+    /**
+     * Holds `ErrorDetail` items for validation errors; other errors may carry
+     * differently shaped entries, such as `{ retryAfter }` for rate limiting.
+     * The specification does not require the field.
+     */
+    details?: unknown[];
   };
 }
 

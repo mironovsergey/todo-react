@@ -8,19 +8,16 @@ import { AuthProvider } from '@/context/auth-provider';
 import { App } from '@/app';
 import '@/styles/global.scss';
 
+// The message doubles as the toast id, so parallel requests failing for the same reason,
+// such as an expired session, produce a single toast.
+const showErrorToast = (error: Error) => {
+  const message = getErrorMessage(error);
+  toast.error(message, { id: message });
+};
+
 const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      if (query.meta?.suppressErrorToast) return;
-      toast.error(getErrorMessage(error));
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError: (error, _variables, _context, mutation) => {
-      if (mutation.meta?.suppressErrorToast) return;
-      toast.error(getErrorMessage(error));
-    },
-  }),
+  queryCache: new QueryCache({ onError: showErrorToast }),
+  mutationCache: new MutationCache({ onError: showErrorToast }),
   defaultOptions: {
     queries: {
       retry: 1,
@@ -30,7 +27,13 @@ const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('The #root element is missing from index.html');
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

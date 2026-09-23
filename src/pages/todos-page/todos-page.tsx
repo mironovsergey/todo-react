@@ -7,14 +7,23 @@ import { TodoFilters } from '@/components/todos/todo-filters/todo-filters';
 import { TodoList } from '@/components/todos/todo-list/todo-list';
 import { Pagination } from '@/components/todos/pagination/pagination';
 import { Button } from '@/components/ui/button/button';
+import { DEFAULT_PAGE_LIMIT } from '@/utils/constants';
 import type { TodosQueryParams } from '@/types/todo';
 import styles from './todos-page.module.scss';
 
 export const TodosPage = () => {
-  const [params, setParams] = useState<TodosQueryParams>({ page: 1, limit: 20 });
+  const [params, setParams] = useState<TodosQueryParams>({ page: 1, limit: DEFAULT_PAGE_LIMIT });
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const { data, isLoading } = useTodos(params);
   const { mutate: bulkDelete, isPending: isBulkDeleting } = useBulkDeleteTodos();
+
+  // Deleting the remaining todos of the last page leaves the current page past the end;
+  // the API returns an empty list for it, so the page moves back to the last one.
+  const lastPage = data ? Math.max(data.pagination.totalPages, 1) : 1;
+
+  if (data && data.pagination.currentPage > lastPage) {
+    setParams({ ...params, page: lastPage });
+  }
 
   const visibleIds = new Set(data?.todos.map((t) => t.id) ?? []);
   const visibleSelectedIds = new Set([...selectedIds].filter((id) => visibleIds.has(id)));

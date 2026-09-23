@@ -5,8 +5,13 @@ import styles from './todo-stats.module.scss';
 export const TodoStats = () => {
   const { data: stats, isLoading } = useTodoStats();
 
-  if (isLoading) return <Spinner size="sm" />;
-  if (!stats) return null;
+  if (isLoading) {
+    return <Spinner size="sm" />;
+  }
+
+  if (!stats) {
+    return null;
+  }
 
   return (
     <div className={styles.stats}>
