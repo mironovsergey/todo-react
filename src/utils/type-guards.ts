@@ -1,20 +1,20 @@
 import type { ErrorDetail, ErrorResponse } from '@/types/api';
-import type { Priority, SortOrder, TodosQueryParams } from '@/types/todo';
+import type { Priority, SortBy, SortOrder } from '@/types/todo';
 
-const PRIORITIES: Priority[] = ['low', 'medium', 'high'];
-const SORT_ORDERS: SortOrder[] = ['asc', 'desc'];
-const SORT_FIELDS: TodosQueryParams['sortBy'][] = ['createdAt', 'updatedAt', 'priority', 'title'];
+const PRIORITIES: readonly Priority[] = ['low', 'medium', 'high'];
+const SORT_ORDERS: readonly SortOrder[] = ['asc', 'desc'];
+const SORT_FIELDS: readonly SortBy[] = ['createdAt', 'updatedAt', 'priority', 'title'];
 
 export const isPriority = (value: string): value is Priority => {
-  return PRIORITIES.includes(value as Priority);
+  return PRIORITIES.some((priority) => priority === value);
 };
 
 export const isSortOrder = (value: string): value is SortOrder => {
-  return SORT_ORDERS.includes(value as SortOrder);
+  return SORT_ORDERS.some((order) => order === value);
 };
 
-export const isSortField = (value: string): value is NonNullable<TodosQueryParams['sortBy']> => {
-  return SORT_FIELDS.includes(value as TodosQueryParams['sortBy']);
+export const isSortField = (value: string): value is SortBy => {
+  return SORT_FIELDS.some((field) => field === value);
 };
 
 export const isErrorResponse = (value: unknown): value is ErrorResponse => {
