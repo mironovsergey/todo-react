@@ -16,18 +16,8 @@ const showErrorToast = (error: Error) => {
 };
 
 const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      if (query.meta?.suppressErrorToast) return;
-      showErrorToast(error);
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError: (error, _variables, _context, mutation) => {
-      if (mutation.meta?.suppressErrorToast) return;
-      showErrorToast(error);
-    },
-  }),
+  queryCache: new QueryCache({ onError: showErrorToast }),
+  mutationCache: new MutationCache({ onError: showErrorToast }),
   defaultOptions: {
     queries: {
       retry: 1,
