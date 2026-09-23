@@ -12,8 +12,14 @@ export const SessionList = () => {
   const { logoutAll } = useAuthContext();
 
   const getDeviceIcon = (userAgent: string | null) => {
-    if (!userAgent) return <Globe size={16} />;
-    if (/mobile|iphone|android/i.test(userAgent)) return <Smartphone size={16} />;
+    if (!userAgent) {
+      return <Globe size={16} />;
+    }
+
+    if (/mobile|iphone|android/i.test(userAgent)) {
+      return <Smartphone size={16} />;
+    }
+
     return <Monitor size={16} />;
   };
 

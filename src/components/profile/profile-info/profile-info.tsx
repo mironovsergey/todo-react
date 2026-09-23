@@ -24,7 +24,9 @@ export const ProfileInfo = () => {
     defaultValues: { name: user?.name ?? '' },
   });
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   const onSubmit = (data: UpdateProfileData) => {
     updateProfile(data, {

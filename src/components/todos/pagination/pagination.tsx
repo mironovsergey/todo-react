@@ -10,7 +10,9 @@ interface PaginationProps {
 export const Pagination = ({ pagination, onPageChange }: PaginationProps) => {
   const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
 
-  if (totalPages <= 1) return null;
+  if (totalPages <= 1) {
+    return null;
+  }
 
   const start = (currentPage - 1) * itemsPerPage + 1;
   const end = Math.min(currentPage * itemsPerPage, totalItems);
