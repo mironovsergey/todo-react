@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import type { User } from '@/types/user';
 import { onSessionExpired } from '@/services/api';
 import { getProfile } from '@/services/users';
@@ -10,6 +11,14 @@ import { AuthContext } from '@/context/auth-context';
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const queryClient = useQueryClient();
+
+  // Cached queries belong to the signed-out user and must not be shown to the next one.
+  const endSession = useCallback(() => {
+    clearTokens();
+    queryClient.removeQueries();
+    setUser(null);
+  }, [queryClient]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -33,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadUser();
   }, []);
 
-  useEffect(() => onSessionExpired(() => setUser(null)), []);
+  useEffect(() => onSessionExpired(endSession), [endSession]);
 
   const login = useCallback((user: User, tokens: { accessToken: string; refreshToken: string }) => {
     setTokens(tokens);
@@ -51,9 +60,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-    clearTokens();
-    setUser(null);
-  }, []);
+    endSession();
+  }, [endSession]);
 
   const logoutAll = useCallback(async () => {
     try {
@@ -62,9 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Ignore
     }
 
-    clearTokens();
-    setUser(null);
-  }, []);
+    endSession();
+  }, [endSession]);
 
   const updateUser = useCallback((user: User) => {
     setUser(user);
